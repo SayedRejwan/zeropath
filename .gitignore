@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+dist/
+build/
+
+# Local DB
+*.db
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+runs/
+
+# Private working notes
+.commandcode/
+
+# Reproducible official-source caches (ATT&CK, D3FEND, NVD)
+data/triads/_official/

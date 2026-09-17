@@ -1,0 +1,36 @@
+code: ignite
+title: Ignite
+difficulty: Easy
+category: Web
+description: 'URL Source: https://blog.raw.pm/en/TryHackMe-Ignite-write-up/'
+tags:
+- linux
+- easy
+- nmap
+- nc
+- wget
+tools:
+- nmap
+- nc
+- wget
+attack_chain:
+- order: 1
+  phase: recon
+  technique: Network_And_Web_Enumeration
+  tool: nmap
+  command: ''
+  notes: Discovered active ports, services, and accessible web paths or shares.
+- order: 2
+  phase: initial_access
+  technique: Remote_Command_Injection
+  tool: custom_payload
+  command: ''
+  notes: Exploited unvalidated user input executing OS commands.
+- order: 3
+  phase: privilege_escalation
+  technique: Privilege_Escalation
+  tool: bash
+  command: ''
+  notes: Escalated privileges to root or Administrator.
+sources:
+- https://blog.raw.pm/en/TryHackMe-Ignite-write-up/

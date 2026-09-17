@@ -1,0 +1,28 @@
+code: introtoresearch
+title: Introtoresearch
+difficulty: Hard
+category: Windows
+description: 'Title: Introductory Researching - Write-up - TryHackMe'
+tags:
+- windows
+- hard
+- nc
+- netcat
+tools:
+- nc
+- netcat
+attack_chain:
+- order: 1
+  phase: initial_access
+  technique: Remote_Command_Injection
+  tool: custom_payload
+  command: ''
+  notes: Exploited unvalidated user input executing OS commands.
+- order: 2
+  phase: privilege_escalation
+  technique: Cron_Job_Hijack
+  tool: bash
+  command: ''
+  notes: Modified writable script or binary executed by scheduled root cron job.
+sources:
+- https://blog.raw.pm/en/TryHackMe-Introductory-Researching-write-up/

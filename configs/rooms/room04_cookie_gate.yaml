@@ -1,0 +1,7 @@
+room_id: room04_cookie_gate
+title: "Room 04: Cookie Gate"
+description: "Obtain a session cookie via login, then access the flag."
+docker:
+  lab: zeropath-lab
+start_path: /room04/
+success_regex: 'FLAG\{ZEROPATH_ROOM04_COOKIE_GATE_LOCAL_DEMO\}'

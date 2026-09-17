@@ -1,0 +1,24 @@
+code: trooper
+title: Trooper
+difficulty: Easy
+category: Walkthrough
+description: TryHackMe challenge focusing on Privilege Escalation with Easy difficulty.
+tags:
+- privilege escalation
+- easy
+tools: []
+attack_chain:
+- order: 1
+  phase: initial_access
+  technique: Web_Vulnerability_Exploitation
+  tool: custom_payload
+  command: ''
+  notes: Gained initial foothold on target system.
+- order: 2
+  phase: privilege_escalation
+  technique: Privilege_Escalation
+  tool: bash
+  command: ''
+  notes: Escalated privileges to root or Administrator.
+sources:
+- https://raw.githubusercontent.com/Cajac/TryHackMe-Writeups/master/Walkthroughs/Easy/Trooper.md

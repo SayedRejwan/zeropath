@@ -1,0 +1,31 @@
+schema_version: '1.0'
+technique_id: T1025
+name: Data from Removable Media
+description: "Adversaries may search connected removable media on computers they have\
+  \ compromised to find files of interest. Sensitive data can be collected from any\
+  \ removable media (optical disk drive, USB memory, etc.) connected to the compromised\
+  \ system prior to Exfiltration. Interactive command shells may be in use, and common\
+  \ functionality within [cmd](https://attack.mitre.org/software/S0106) may be used\
+  \ to gather information. \n\nSome adversaries may also use [Automated Collection](https://attack.mitre.org/techniques/T1119)\
+  \ on removable media."
+kill_chain:
+- collection
+platforms:
+- Linux
+- macOS
+- Windows
+difficulty: medium
+status: draft
+prerequisites: []
+room_refs: []
+pentest_steps: []
+evidence: []
+detections: []
+remedies: []
+cve_refs: []
+related_techniques: []
+sources:
+- title: 'MITRE ATT&CK: Data from Removable Media'
+  url: https://attack.mitre.org/techniques/T1025
+  source_type: official
+  accessed: generated-from-official-cache

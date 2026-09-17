@@ -1,0 +1,46 @@
+schema_version: '1.0'
+technique_id: T1190
+name: Exploit Public-Facing Application
+description: Adversaries may exploit an internet-facing host or service to gain initial access when exposed software contains a vulnerability or unsafe configuration.
+kill_chain: [initial-access]
+platforms: [Linux, Windows, Containers, Network]
+difficulty: high
+status: reviewed
+prerequisites:
+  - Written authorization and an isolated application endpoint owned by the tester
+room_refs: [vulnversity, rootme]
+pentest_steps:
+  - order: 1
+    name: Test the local application against focused vulnerability templates
+    tool: Nuclei
+    command: 'nuclei -u http://127.0.0.1:8080 -severity high,critical -jsonl -o evidence.jsonl'
+    prerequisite: The intentionally vulnerable lab is running on loopback port 8080 and Nuclei templates are current.
+    expected_result: Structured findings identify matched templates, endpoints, and response evidence without leaving the authorized host.
+    safety: Keep the target bound to loopback and use non-destructive templates against an explicitly authorized training application.
+evidence:
+  - name: Exploit-probe request and application response
+    artifact_type: application
+    location: Reverse-proxy access log and evidence.jsonl
+    sample: '127.0.0.1 POST /vulnerable-endpoint status=500 scanner=nuclei'
+detections:
+  - name: Repeated exploit-pattern requests
+    data_source: Web application firewall and reverse-proxy logs
+    query: 'count(requests by src_ip, uri over 5m where signature_severity >= high) > 3'
+    strategy: Correlate high-severity WAF signatures with rapid endpoint enumeration and abnormal server errors.
+    d3fend: [D3-NTA, D3-FA]
+remedies:
+  - name: Remove the externally exploitable condition
+    priority: P0
+    action: Patch the affected component, disable the vulnerable route, and enforce an allowlist until the patched build is deployed.
+    verification: Re-run the exact authorized template and confirm no match while normal application health checks remain green.
+cve_refs: []
+related_techniques: [T1595.002]
+sources:
+  - title: 'MITRE ATT&CK T1190: Exploit Public-Facing Application'
+    url: https://attack.mitre.org/techniques/T1190/
+    source_type: official
+    accessed: '2026-09-17'
+  - title: CISA Known Exploited Vulnerabilities Catalog
+    url: https://www.cisa.gov/known-exploited-vulnerabilities-catalog
+    source_type: official
+    accessed: '2026-09-17'

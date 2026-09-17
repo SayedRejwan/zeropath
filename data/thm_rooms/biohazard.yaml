@@ -1,0 +1,34 @@
+code: biohazard
+title: Biohazard
+difficulty: Medium
+category: Web
+description: 'URL Source: https://blog.raw.pm/en/TryHackMe-Biohazard-write-up/'
+tags:
+- linux
+- insane
+- nmap
+- binwalk
+tools:
+- nmap
+- binwalk
+attack_chain:
+- order: 1
+  phase: recon
+  technique: Network_And_Web_Enumeration
+  tool: nmap
+  command: ''
+  notes: Discovered active ports, services, and accessible web paths or shares.
+- order: 2
+  phase: initial_access
+  technique: Remote_Command_Injection
+  tool: custom_payload
+  command: ''
+  notes: Exploited unvalidated user input executing OS commands.
+- order: 3
+  phase: privilege_escalation
+  technique: Sudo_Privilege_Abuse
+  tool: bash
+  command: ''
+  notes: Leveraged misconfigured sudo permissions to spawn root shell.
+sources:
+- https://blog.raw.pm/en/TryHackMe-Biohazard-write-up/

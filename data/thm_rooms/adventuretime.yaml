@@ -1,0 +1,38 @@
+code: adventuretime
+title: Adventuretime
+difficulty: Hard
+category: Linux
+description: 'Title: Adventure Time - Write-up - TryHackMe'
+tags:
+- linux
+- hard
+- nmap
+- ffuf
+- hydra
+- netcat
+tools:
+- nmap
+- ffuf
+- hydra
+- netcat
+attack_chain:
+- order: 1
+  phase: recon
+  technique: Network_And_Web_Enumeration
+  tool: nmap, ffuf
+  command: ''
+  notes: Discovered active ports, services, and accessible web paths or shares.
+- order: 2
+  phase: initial_access
+  technique: Remote_Command_Injection
+  tool: custom_payload
+  command: ''
+  notes: Exploited unvalidated user input executing OS commands.
+- order: 3
+  phase: privilege_escalation
+  technique: SUID_Binary_Abuse
+  tool: bash
+  command: ''
+  notes: Exploited custom or misconfigured SUID binary to escalate privilege.
+sources:
+- https://blog.raw.pm/en/TryHackMe-Adventure-Time-write-up/

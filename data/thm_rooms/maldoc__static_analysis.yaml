@@ -1,0 +1,26 @@
+code: maldoc__static_analysis
+title: 'MalDoc: Static Analysis'
+difficulty: Medium
+category: Walkthrough
+description: 'URL Source: https://raw.githubusercontent.com/Cajac/TryHackMe-Writeups/master/Walkthroughs/Medium/MalDoc_Static_Analysis.md'
+tags:
+- windows
+- medium
+- curl
+tools:
+- curl
+attack_chain:
+- order: 1
+  phase: initial_access
+  technique: Remote_Command_Injection
+  tool: custom_payload
+  command: ''
+  notes: Exploited unvalidated user input executing OS commands.
+- order: 2
+  phase: privilege_escalation
+  technique: Privilege_Escalation
+  tool: bash
+  command: ''
+  notes: Escalated privileges to root or Administrator.
+sources:
+- https://raw.githubusercontent.com/Cajac/TryHackMe-Writeups/master/Walkthroughs/Medium/MalDoc_Static_Analysis.md
