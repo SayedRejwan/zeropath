@@ -25,4 +25,7 @@ runs/
 .commandcode/
 
 # Reproducible official-source caches (ATT&CK, D3FEND, NVD)
-data/triads/_official/
+zeropath/data/triads/_official/
+
+# Local-only workspace scripts
+local/
