@@ -1,0 +1,46 @@
+schema_version: '1.0'
+technique_id: T1021.002
+name: SMB Windows Admin Shares
+description: Adversaries may use SMB administrative shares with valid credentials to access remote systems and support lateral movement.
+kill_chain: [lateral-movement]
+platforms: [Windows]
+difficulty: medium
+status: reviewed
+prerequisites:
+  - Two isolated Windows lab hosts and a synthetic account authorized for the target share
+room_refs: [active_directory_basics, ad__basic_enumeration]
+pentest_steps:
+  - order: 1
+    name: Enumerate SMB shares with synthetic lab credentials
+    tool: smbclient
+    command: 'smbclient -L //127.0.0.1 -U LAB/user'
+    prerequisite: The isolated SMB lab is bound to loopback and the LAB user credential is synthetic.
+    expected_result: The server returns the shares visible to the synthetic account, including any intentionally exposed administrative share.
+    safety: Use only synthetic credentials and a loopback or isolated lab target; do not enumerate corporate or internet hosts.
+evidence:
+  - name: Administrative-share authentication
+    artifact_type: authentication
+    location: Windows Security Event IDs 4624 and 5140
+    sample: 'LogonType=3 ShareName=\\*\\ADMIN$ SubjectUserName=user'
+detections:
+  - name: Remote administrative-share access
+    data_source: Windows Security logs
+    query: 'EventID=5140 AND ShareName endswith "\\ADMIN$" AND SourceAddress not in management_subnets'
+    strategy: Alert on ADMIN$ or C$ access from non-management systems and correlate with network logons and service creation.
+    d3fend: [D3-NTA, D3-ANAA]
+remedies:
+  - name: Restrict administrative-share lateral movement
+    priority: P1
+    action: Limit SMB access to management networks, enforce host firewalls, disable unused administrative shares, and rotate exposed credentials.
+    verification: Repeat the authorized share listing from a non-management lab segment and confirm access is denied and logged.
+cve_refs: []
+related_techniques: [T1078, T1569.002]
+sources:
+  - title: 'MITRE ATT&CK T1021.002: SMB Windows Admin Shares'
+    url: https://attack.mitre.org/techniques/T1021/002/
+    source_type: official
+    accessed: '2026-09-17'
+  - title: Microsoft SMB security enhancements
+    url: https://learn.microsoft.com/windows-server/storage/file-server/smb-security
+    source_type: vendor
+    accessed: '2026-09-17'

@@ -10,6 +10,7 @@ from rich.table import Table
 
 from zeropath.ops import kill_run
 from zeropath.orchestrator import Orchestrator
+from zeropath.paths import lab_dir as _lab_dir, triads_dir
 from zeropath.rooms import all_rooms, get_room, rooms_dir
 from zeropath.util import new_run_id, runs_dir
 from zeropath.replay import iter_jsonl
@@ -48,7 +49,7 @@ def run(
 ) -> None:
     run_id = new_run_id()
     room = get_room(room_id)
-    lab_dir = Path("lab").resolve()
+    lab_dir = _lab_dir()
 
     console.print(f"[bold]run_id[/bold]: {run_id}")
     console.print(f"[bold]room[/bold]: {room.room_id} — {room.title}")
@@ -97,7 +98,7 @@ def demo(
 
     for room in rooms:
         run_id = new_run_id()
-        orch = Orchestrator(run_id=run_id, room=room, lab_dir=Path("lab").resolve())
+        orch = Orchestrator(run_id=run_id, room=room, lab_dir=_lab_dir())
         try:
             res = orch.run(agent_name=agent, on_update=None)
             t.add_row(room.room_id, "yes" if res.ok else "no", str(res.steps), str(res.flag or ""))
@@ -117,7 +118,7 @@ def capability_benchmark(
     """Measure all synthetic local rooms and retain per-run evidence reports."""
     from zeropath.benchmark import benchmark
 
-    result = benchmark(list(all_rooms().values()), lab_dir=Path("lab").resolve(),
+    result = benchmark(list(all_rooms().values()), lab_dir=_lab_dir(),
                        agent=agent, backend=backend, repeats=repeats, output=output)
     table = Table(title="ZeroPath Local Capability Benchmark")
     for name in ("Room", "Repeat", "Result", "Attempts", "Seconds"):
@@ -220,15 +221,9 @@ def harvest(
 
     # Import default seeds from runner
     import importlib.util
-    from pathlib import Path
-    script_path = Path("scripts") / "run_thm_agent.py"
-    if script_path.exists():
-        spec = importlib.util.spec_from_file_location("run_thm_agent", script_path)
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        seeds = mod.DEFAULT_TARGET_ROOMS
-    else:
-        seeds = []
+    import scripts.run_thm_agent as _runner
+
+    seeds = _runner.DEFAULT_TARGET_ROOMS
 
     scraper = THMScraper()
     items = [{"name": "Custom", "url": url}] if url else seeds[:limit]
@@ -257,7 +252,7 @@ def harvest(
 
 @triads_app.command("validate")
 def triads_validate(
-    path: Path = typer.Option(Path("data/triads/techniques"), help="Directory containing triad YAML files."),
+    path: Path = typer.Option(triads_dir(), help="Directory containing triad YAML files."),
     require_reviewed: bool = typer.Option(False, help="Fail when any record is still a draft."),
 ) -> None:
     """Validate triad schemas, sourcing, and operational quality gates."""
@@ -298,7 +293,7 @@ def triads_skeleton(
 
 @triads_app.command("sync")
 def triads_sync(
-    path: Path = typer.Option(Path("data/triads/techniques"), help="Reviewed triad source directory."),
+    path: Path = typer.Option(triads_dir(), help="Reviewed triad source directory."),
 ) -> None:
     """Validate and load reviewed triads into SQLite and the local graph."""
     from scripts.validate_triads import validate_directory

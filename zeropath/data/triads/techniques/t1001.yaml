@@ -1,0 +1,32 @@
+schema_version: '1.0'
+technique_id: T1001
+name: Data Obfuscation
+description: 'Adversaries may obfuscate command and control traffic to make it more
+  difficult to detect.(Citation: Bitdefender FunnyDream Campaign November 2020) Command
+  and control (C2) communications are hidden (but not necessarily encrypted) in an
+  attempt to make the content more difficult to discover or decipher and to make the
+  communication less conspicuous and hide commands from being seen. This encompasses
+  many methods, such as adding junk data to protocol traffic, using steganography,
+  or impersonating legitimate protocols.'
+kill_chain:
+- command-and-control
+platforms:
+- ESXi
+- Linux
+- macOS
+- Windows
+difficulty: medium
+status: draft
+prerequisites: []
+room_refs: []
+pentest_steps: []
+evidence: []
+detections: []
+remedies: []
+cve_refs: []
+related_techniques: []
+sources:
+- title: 'MITRE ATT&CK: Data Obfuscation'
+  url: https://attack.mitre.org/techniques/T1001
+  source_type: official
+  accessed: generated-from-official-cache

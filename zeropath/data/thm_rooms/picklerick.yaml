@@ -1,0 +1,36 @@
+code: picklerick
+title: Pickle-Rick-
+difficulty: Easy
+category: Web
+description: 'URL Source: https://raw.githubusercontent.com/rohitdeshmukh27/TryHackMe-Pickle-Rick-Writeups/main/README.md'
+tags:
+- linux
+- easy
+- nmap
+- dirsearch
+- netcat
+tools:
+- nmap
+- dirsearch
+- netcat
+attack_chain:
+- order: 1
+  phase: recon
+  technique: Network_And_Web_Enumeration
+  tool: nmap, dirsearch
+  command: ''
+  notes: Discovered active ports, services, and accessible web paths or shares.
+- order: 2
+  phase: initial_access
+  technique: Remote_Command_Injection
+  tool: custom_payload
+  command: ''
+  notes: Exploited unvalidated user input executing OS commands.
+- order: 3
+  phase: privilege_escalation
+  technique: Privilege_Escalation
+  tool: bash
+  command: ''
+  notes: Escalated privileges to root or Administrator.
+sources:
+- https://raw.githubusercontent.com/rohitdeshmukh27/TryHackMe-Pickle-Rick-Writeups/main/README.md

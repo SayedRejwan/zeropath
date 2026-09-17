@@ -14,10 +14,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from zeropath.schemas.triad import Triad
+from zeropath.paths import official_cache_dir, triads_dir
 
 
-DEFAULT_ATTACK = ROOT / "data" / "triads" / "_official" / "attack_enterprise.json"
-DEFAULT_OUTPUT = ROOT / "data" / "triads" / "techniques"
+DEFAULT_ATTACK = official_cache_dir() / "attack_enterprise.json"
+DEFAULT_OUTPUT = triads_dir()
 
 
 def _attack_id(obj: dict) -> str | None:

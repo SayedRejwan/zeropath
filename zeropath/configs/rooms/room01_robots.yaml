@@ -1,0 +1,7 @@
+room_id: room01_robots
+title: "Room 01: Robots"
+description: "Use robots.txt to discover a hidden path containing the flag."
+docker:
+  lab: zeropath-lab
+start_path: /room01/robots.txt
+success_regex: 'FLAG\{ZEROPATH_ROOM01_ROBOTS_LOCAL_DEMO\}'

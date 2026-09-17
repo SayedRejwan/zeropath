@@ -4,12 +4,13 @@ from pathlib import Path
 from typing import Iterable
 
 from zeropath.db import KnowledgeBase
+from zeropath.paths import triads_catalog_path, triads_dir
 from zeropath.schemas.triad import Triad, load_triad
 from scripts.validate_triads import quality_issues
 
 
-DEFAULT_TRIAD_DIR = Path("data") / "triads" / "techniques"
-DEFAULT_CATALOG = Path("data") / "triads" / "CATALOG.md"
+DEFAULT_TRIAD_DIR = triads_dir()
+DEFAULT_CATALOG = triads_catalog_path()
 
 
 def iter_reviewed_triads(base_dir: Path = DEFAULT_TRIAD_DIR) -> Iterable[tuple[Path, Triad]]:

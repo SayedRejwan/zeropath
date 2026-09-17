@@ -1,0 +1,24 @@
+code: misp
+title: MISP
+difficulty: Medium
+category: Walkthrough
+description: TryHackMe challenge focusing on Web with Medium difficulty.
+tags:
+- web
+- medium
+tools: []
+attack_chain:
+- order: 1
+  phase: initial_access
+  technique: Remote_Command_Injection
+  tool: custom_payload
+  command: ''
+  notes: Exploited unvalidated user input executing OS commands.
+- order: 2
+  phase: privilege_escalation
+  technique: Privilege_Escalation
+  tool: bash
+  command: ''
+  notes: Escalated privileges to root or Administrator.
+sources:
+- https://raw.githubusercontent.com/Cajac/TryHackMe-Writeups/master/Walkthroughs/Medium/MISP.md

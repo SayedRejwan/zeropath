@@ -10,13 +10,12 @@ from zeropath.scrapers.sync_kb import save_room_yaml, sync_room_to_kb
 
 
 def ingest_local_redteam_rooms(
-    base_dir: Path | str = r"F:\04_Cybersecurity_RedTeam\Try hack me Rooms",
+    base_dir: Path | str | None = None,
     kb: Optional[KnowledgeBase] = None,
 ) -> list[THMRoomProfile]:
-    """
-    Ingest user's local TryHackMe notes, playbooks, and solutions from F:\04_Cybersecurity_RedTeam
-    into ZeroPath's KnowledgeBase and data/thm_rooms.
-    """
+    """Ingest a directory of local TryHackMe notes into ZeroPath's KnowledgeBase."""
+    if base_dir is None:
+        raise ValueError("base_dir is required: pass your local TryHackMe notes directory explicitly.")
     path = Path(base_dir)
     if not path.exists():
         print(f"[!] Directory does not exist: {path}")

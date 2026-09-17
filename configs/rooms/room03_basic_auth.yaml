@@ -1,7 +1,0 @@
-room_id: room03_basic_auth
-title: "Room 03: Basic Auth"
-description: "Discover credentials via sitemap and use HTTP basic auth to access the flag."
-docker:
-  lab: zeropath-lab
-start_path: /room03/sitemap.xml
-success_regex: 'FLAG\{ZEROPATH_ROOM03_BASIC_AUTH_LOCAL_DEMO\}'

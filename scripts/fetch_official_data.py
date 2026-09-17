@@ -10,7 +10,12 @@ import httpx
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_OUTPUT = ROOT / "data" / "triads" / "_official"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from zeropath.paths import official_cache_dir
+
+DEFAULT_OUTPUT = official_cache_dir()
 
 FEEDS = {
     "attack_enterprise.json": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json",

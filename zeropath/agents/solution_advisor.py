@@ -6,6 +6,7 @@ from typing import Any, Optional
 import yaml
 
 from zeropath.db import KnowledgeBase
+from zeropath.paths import thm_rooms_dir, triads_dir
 from zeropath.schemas.triad import Triad, load_triad
 
 
@@ -21,8 +22,8 @@ class SolutionAdvisor:
         kb: Optional[KnowledgeBase] = None,
         triad_dir: Optional[Path] = None,
     ) -> None:
-        self.data_dir = data_dir or (Path("data") / "thm_rooms")
-        self.triad_dir = triad_dir or (Path("data") / "triads" / "techniques")
+        self.data_dir = data_dir or thm_rooms_dir()
+        self.triad_dir = triad_dir or triads_dir()
         self.kb = kb or KnowledgeBase()
         try:
             self.kb.init()

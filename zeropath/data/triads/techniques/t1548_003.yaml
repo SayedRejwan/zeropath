@@ -1,0 +1,46 @@
+schema_version: '1.0'
+technique_id: T1548.003
+name: Sudo and Sudo Caching
+description: Adversaries may abuse permissive sudo rules or cached credentials to execute commands with elevated privileges on Unix-like systems.
+kill_chain: [privilege-escalation, defense-evasion]
+platforms: [Linux, macOS]
+difficulty: medium
+status: reviewed
+prerequisites:
+  - Authorized disposable Linux lab with an intentionally permissive sudoers entry
+room_refs: [linux_privesc, linux_privesc_arena]
+pentest_steps:
+  - order: 1
+    name: Enumerate effective sudo permissions
+    tool: sudo
+    command: 'sudo -l'
+    prerequisite: A low-privilege shell exists inside the disposable lab.
+    expected_result: The command lists binaries and command patterns the lab account may run with elevated privileges.
+    safety: Run only against the current authorized lab account; do not alter sudoers or invoke an elevated shell on production systems.
+evidence:
+  - name: Sudo policy enumeration
+    artifact_type: authentication
+    location: auth.log or system journal
+    sample: 'sudo: labuser : TTY=pts/0 ; COMMAND=/usr/bin/sudo -l'
+detections:
+  - name: Unusual sudo enumeration followed by privileged execution
+    data_source: Linux auditd and sudo authentication logs
+    query: 'sudo command="-l" followed_by sudo command in high_risk_binaries within 10m'
+    strategy: Correlate sudo permission enumeration with subsequent execution of shell-capable binaries by non-administrative users.
+    d3fend: [D3-UAP]
+remedies:
+  - name: Enforce least-privilege sudo policy
+    priority: P1
+    action: Remove wildcard and NOPASSWD rules for shell-capable binaries, then restrict allowed commands to exact absolute paths and arguments.
+    verification: Run sudo -l as the affected account and confirm only the intended non-shell-capable commands remain.
+cve_refs: []
+related_techniques: [T1068]
+sources:
+  - title: 'MITRE ATT&CK T1548.003: Sudo and Sudo Caching'
+    url: https://attack.mitre.org/techniques/T1548/003/
+    source_type: official
+    accessed: '2026-09-17'
+  - title: Sudoers manual
+    url: https://www.sudo.ws/docs/man/sudoers.man/
+    source_type: vendor
+    accessed: '2026-09-17'

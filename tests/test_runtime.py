@@ -10,11 +10,12 @@ import pytest
 
 from zeropath.config import load_room_configs
 from zeropath.orchestrator import Orchestrator
+from zeropath.paths import lab_dir, rooms_dir
 from zeropath.types import ToolCall
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ROOMS = list(load_room_configs(ROOT / "configs" / "rooms").values())
+ROOMS = list(load_room_configs(rooms_dir()).values())
 
 
 @pytest.fixture
@@ -37,7 +38,7 @@ def assert_stopped(orch, result):
 
 @pytest.mark.parametrize("room", ROOMS, ids=lambda room: room.room_id)
 def test_local_rooms_capture_evidence_and_cleanup(room, isolated_runs):
-    orch = Orchestrator(room.room_id, room, ROOT / "lab", backend="local")
+    orch = Orchestrator(room.room_id, room, lab_dir(), backend="local")
     result = orch.run()
     assert result.ok, result.error
     assert result.duration_s > 0
@@ -75,7 +76,7 @@ def test_startup_failure_is_reported_and_cleaned(isolated_runs, tmp_path):
 
 def test_step_budget_has_explicit_failure(isolated_runs):
     room = ROOMS[0].model_copy(update={"max_steps": 1})
-    orch = Orchestrator("budget", room, ROOT / "lab", backend="local")
+    orch = Orchestrator("budget", room, lab_dir(), backend="local")
     result = orch.run()
     assert not result.ok
     assert result.steps == 1
@@ -85,7 +86,7 @@ def test_step_budget_has_explicit_failure(isolated_runs):
 
 def test_success_uses_configured_regex_not_any_flag(isolated_runs):
     room = ROOMS[1].model_copy(update={"success_regex": r"FLAG\{ONLY_THIS_ROOM_IS_VALID\}"})
-    orch = Orchestrator("wrong-flag", room, ROOT / "lab", backend="local")
+    orch = Orchestrator("wrong-flag", room, lab_dir(), backend="local")
     result = orch.run()
     assert not result.ok
     assert result.flag is None
@@ -115,7 +116,7 @@ def test_llm_consumes_queue_and_tracks_visited_without_network(isolated_runs, mo
     monkeypatch.setattr(advisor_module, "SolutionAdvisor", lambda: object())
     monkeypatch.setattr(agent_module.LLMAgent, "from_env", lambda **kwargs: llm)
     room = ROOMS[1]
-    orch = Orchestrator("llm-mock", room, ROOT / "lab", backend="local")
+    orch = Orchestrator("llm-mock", room, lab_dir(), backend="local")
     result = orch.run(agent_name="llm")
     assert result.ok, result.error
     assert llm.closed
@@ -131,7 +132,7 @@ def test_benchmark_continues_after_failure_and_saves_measurements(isolated_runs,
     benchmark_module = importlib.import_module("zeropath.benchmark")
     failing = ROOMS[0].model_copy(update={"max_steps": 1})
     output = tmp_path / "benchmark.json"
-    payload = benchmark_module.benchmark([failing, ROOMS[1]], lab_dir=ROOT / "lab", output=output)
+    payload = benchmark_module.benchmark([failing, ROOMS[1]], lab_dir=lab_dir(), output=output)
     assert payload["total"] == 2
     assert payload["passed"] == payload["failed"] == 1
     assert payload["success_rate"] == 0.5
@@ -155,7 +156,7 @@ def test_invalid_llm_actions_exhaust_budget_and_cleanup(isolated_runs, monkeypat
     monkeypatch.setattr(advisor, "SolutionAdvisor", lambda: object())
     monkeypatch.setattr(module.LLMAgent, "from_env", lambda **kwargs: InvalidLLM())
     room = ROOMS[1].model_copy(update={"max_steps": 2})
-    orch = Orchestrator("invalid-llm", room, ROOT / "lab", backend="local")
+    orch = Orchestrator("invalid-llm", room, lab_dir(), backend="local")
     result = orch.run(agent_name="llm")
     assert not result.ok
     assert result.steps == 2
@@ -172,7 +173,7 @@ def test_client_close_failure_still_stops_lab(isolated_runs, monkeypatch):
         raise RuntimeError("close failed")
 
     monkeypatch.setattr(module.HttpTools, "close", failing_close)
-    orch = Orchestrator("close-failure", ROOMS[1], ROOT / "lab", backend="local")
+    orch = Orchestrator("close-failure", ROOMS[1], lab_dir(), backend="local")
     result = orch.run()
     assert not result.ok
     assert result.flag is not None

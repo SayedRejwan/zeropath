@@ -1,7 +1,0 @@
-room_id: room05_header_key
-title: "Room 05: Header Key"
-description: "Extract a header key hint from HTML and use it to retrieve the flag."
-docker:
-  lab: zeropath-lab
-start_path: /room05/
-success_regex: 'FLAG\{ZEROPATH_ROOM05_HEADER_KEY_LOCAL_DEMO\}'

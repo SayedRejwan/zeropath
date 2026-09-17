@@ -1,0 +1,15 @@
+{
+  "fetched_at": "2026-09-16T18:07:12.819687+00:00",
+  "feeds": {
+    "attack_enterprise.json": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json",
+    "d3fend_ontology.json": "https://next.d3fend.mitre.org/ontologies/d3fend.json",
+    "d3fend_full_mappings.json": "https://next.d3fend.mitre.org/api/ontology/inference/d3fend-full-mappings.json"
+  },
+  "nvd_api": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+  "files": {
+    "attack_enterprise.json": "cached",
+    "d3fend_ontology.json": "cached",
+    "d3fend_full_mappings.json": "cached",
+    "nvd_recent.json": "refreshed"
+  }
+}

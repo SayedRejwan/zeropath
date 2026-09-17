@@ -4,11 +4,12 @@ from functools import lru_cache
 from pathlib import Path
 
 from zeropath.config import RoomConfig, load_room_configs
+from zeropath.paths import rooms_dir as _default_rooms_dir
 
 
 @lru_cache(maxsize=1)
 def rooms_dir() -> Path:
-    return Path("configs") / "rooms"
+    return _default_rooms_dir()
 
 
 @lru_cache(maxsize=1)

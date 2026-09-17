@@ -1,0 +1,24 @@
+code: rootme
+title: RootMe
+difficulty: Easy
+category: Web
+description: TryHackMe challenge focusing on Web with Easy difficulty.
+tags:
+- web
+- easy
+tools: []
+attack_chain:
+- order: 1
+  phase: initial_access
+  technique: Web_Vulnerability_Exploitation
+  tool: custom_payload
+  command: ''
+  notes: Gained initial foothold on target system.
+- order: 2
+  phase: privilege_escalation
+  technique: Privilege_Escalation
+  tool: bash
+  command: ''
+  notes: Escalated privileges to root or Administrator.
+sources:
+- https://medium.com/@prajwalmahajan/tryhackme-rootme-walkthrough-d843ff124b61

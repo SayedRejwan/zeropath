@@ -12,9 +12,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from zeropath.schemas.triad import Triad, load_triad
+from zeropath.paths import triads_dir as _default_triads_dir
 
 
-DEFAULT_DIR = ROOT / "data" / "triads" / "techniques"
+DEFAULT_DIR = _default_triads_dir()
 TEMPLATE_MARKERS = re.compile(
     r"\b(todo|tbd|lorem ipsum|fill me|replace me|example only|generated placeholder)\b|<[^>]+>",
     re.IGNORECASE,

@@ -1,7 +1,0 @@
-room_id: room06_query_puzzle
-title: "Room 06: Query Puzzle"
-description: "Follow a hint and supply the correct query parameter to retrieve the flag."
-docker:
-  lab: zeropath-lab
-start_path: /room06/
-success_regex: 'FLAG\{ZEROPATH_ROOM06_QUERY_PUZZLE_LOCAL_DEMO\}'

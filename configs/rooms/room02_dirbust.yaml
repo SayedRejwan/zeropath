@@ -1,7 +1,0 @@
-room_id: room02_dirbust
-title: "Room 02: Dirbust"
-description: "Find an unlinked admin endpoint and retrieve the flag."
-docker:
-  lab: zeropath-lab
-start_path: /room02/
-success_regex: 'FLAG\{ZEROPATH_ROOM02_DIRBUST_LOCAL_DEMO\}'

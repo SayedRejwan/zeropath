@@ -1,0 +1,40 @@
+code: linux_privesc_arena
+title: network
+difficulty: Medium
+category: Walkthrough
+description: TryHackMe challenge focusing on Linux with Medium difficulty.
+tags:
+- linux
+- medium
+- nmap
+- john
+- hashcat
+- linpeas
+- wget
+tools:
+- nmap
+- john
+- hashcat
+- linpeas
+- wget
+attack_chain:
+- order: 1
+  phase: recon
+  technique: Network_And_Web_Enumeration
+  tool: nmap
+  command: ''
+  notes: Discovered active ports, services, and accessible web paths or shares.
+- order: 2
+  phase: initial_access
+  technique: Remote_Command_Injection
+  tool: custom_payload
+  command: ''
+  notes: Exploited unvalidated user input executing OS commands.
+- order: 3
+  phase: privilege_escalation
+  technique: Sudo_Privilege_Abuse
+  tool: linpeas
+  command: ''
+  notes: Leveraged misconfigured sudo permissions to spawn root shell.
+sources:
+- https://raw.githubusercontent.com/Cajac/TryHackMe-Writeups/master/Walkthroughs/Medium/Linux_PrivEsc_Arena.md

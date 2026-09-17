@@ -1,0 +1,24 @@
+code: windows_event_logs
+title: Windows Event Logs
+difficulty: Medium
+category: Walkthrough
+description: TryHackMe challenge focusing on Active Directory with Medium difficulty.
+tags:
+- active directory
+- medium
+tools: []
+attack_chain:
+- order: 1
+  phase: initial_access
+  technique: Remote_Command_Injection
+  tool: custom_payload
+  command: ''
+  notes: Exploited unvalidated user input executing OS commands.
+- order: 2
+  phase: privilege_escalation
+  technique: Privilege_Escalation
+  tool: bash
+  command: ''
+  notes: Escalated privileges to root or Administrator.
+sources:
+- https://raw.githubusercontent.com/Cajac/TryHackMe-Writeups/master/Walkthroughs/Medium/Windows_Event_Logs.md

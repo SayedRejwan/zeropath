@@ -5,11 +5,12 @@ from typing import Sequence
 import yaml
 
 from zeropath.db import KnowledgeBase
+from zeropath.paths import thm_rooms_dir
 from .thm_scraper import THMRoomProfile
 
 
 def ensure_data_dir() -> Path:
-    out_dir = Path("data") / "thm_rooms"
+    out_dir = thm_rooms_dir()
     out_dir.mkdir(parents=True, exist_ok=True)
     return out_dir
 

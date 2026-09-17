@@ -1,0 +1,44 @@
+code: 25daysofchristmas
+title: 25Daysofchristmas
+difficulty: Easy
+category: Active Directory
+description: 'Title: Advent of Cyber - Write-up - TryHackMe'
+tags:
+- active directory
+- easy
+- nmap
+- ffuf
+- hydra
+- john
+- sqlmap
+tools:
+- nmap
+- ffuf
+- hydra
+- john
+- sqlmap
+- metasploit
+- msfconsole
+- curl
+- wireshark
+attack_chain:
+- order: 1
+  phase: recon
+  technique: Network_And_Web_Enumeration
+  tool: nmap, ffuf
+  command: ''
+  notes: Discovered active ports, services, and accessible web paths or shares.
+- order: 2
+  phase: initial_access
+  technique: Remote_Command_Injection
+  tool: custom_payload
+  command: ''
+  notes: Exploited unvalidated user input executing OS commands.
+- order: 3
+  phase: privilege_escalation
+  technique: SUID_Binary_Abuse
+  tool: bash
+  command: ''
+  notes: Exploited custom or misconfigured SUID binary to escalate privilege.
+sources:
+- https://blog.raw.pm/en/TryHackMe-Advent-of-Cyber-write-up/
