@@ -15,7 +15,7 @@ from zeropath.types import ToolCall
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ROOMS = list(load_room_configs(rooms_dir()).values())
+ROOMS = [r for r in load_room_configs(rooms_dir()).values() if not r.external]
 
 
 @pytest.fixture

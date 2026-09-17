@@ -32,10 +32,10 @@ class RunResult:
 
 
 class Orchestrator:
-    def __init__(self, run_id: str, room: RoomConfig, lab_dir: Path, backend: str = "auto") -> None:
+    def __init__(self, run_id: str, room: RoomConfig, lab_dir: Path, backend: str = "auto", target_url: str | None = None) -> None:
         self.run_id = run_id
         self.room = room
-        self.env = create_lab_env(run_id=run_id, lab_dir=lab_dir, backend=backend)
+        self.env = create_lab_env(run_id=run_id, lab_dir=lab_dir, backend=backend, target_url=target_url)
         self.log = Logbook(run_id=run_id, base_dir=runs_dir())
 
     def run(self, agent_name: str = "heuristic", on_update=None, keep_env: bool = False) -> RunResult:

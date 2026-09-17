@@ -16,6 +16,7 @@ class RoomConfig(BaseModel):
     start_path: str
     success_regex: str = r"FLAG\{[A-Za-z0-9_\-:.]{6,128}\}"
     max_steps: int = Field(default=30, ge=1, le=10000)
+    external: bool = Field(default=False, help="True: room attaches to an operator-run lab via --target, never spawned.")
 
     @field_validator("success_regex")
     @classmethod

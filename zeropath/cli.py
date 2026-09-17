@@ -11,6 +11,7 @@ from rich.table import Table
 from zeropath.ops import kill_run
 from zeropath.orchestrator import Orchestrator
 from zeropath.paths import lab_dir as _lab_dir, triads_dir
+from zeropath.tools.http_tools import HttpTools
 from zeropath.rooms import all_rooms, get_room, rooms_dir
 from zeropath.util import new_run_id, runs_dir
 from zeropath.replay import iter_jsonl
@@ -45,7 +46,8 @@ def run(
     agent: str = typer.Option("heuristic", help="Agent to use (heuristic | llm)"),
     keep_env: bool = typer.Option(False, help="Keep the Docker container running after the run."),
     live: bool = typer.Option(True, help="Print live step updates during the run."),
-    backend: str = typer.Option("auto", help="Lab backend: auto | local | docker."),
+    backend: str = typer.Option("auto", help="Lab backend: auto | local | docker | external."),
+    target: str = typer.Option(None, help="Base URL for external backend, e.g. http://127.0.0.1:8077"),
 ) -> None:
     run_id = new_run_id()
     room = get_room(room_id)
@@ -54,7 +56,7 @@ def run(
     console.print(f"[bold]run_id[/bold]: {run_id}")
     console.print(f"[bold]room[/bold]: {room.room_id} — {room.title}")
 
-    orch = Orchestrator(run_id=run_id, room=room, lab_dir=lab_dir, backend=backend)
+    orch = Orchestrator(run_id=run_id, room=room, lab_dir=lab_dir, backend=backend, target_url=target)
     try:
         def _update(ev: dict) -> None:
             if not live:
@@ -248,6 +250,65 @@ def harvest(
 
     cat_path = save_room_catalog(profiles)
     console.print(f"[bold green]Harvesting complete![/bold green] Catalog: {cat_path}")
+
+
+@app.command("investigate")
+def investigate(
+    room_id: str = typer.Argument(..., help="Room ID (see: zeropath rooms list)"),
+    target: str = typer.Option("http://127.0.0.1:8077", help="Base URL of the running external lab."),
+    model: str = typer.Option(None, help="Ollama/OpenAI-compatible model override."),
+    max_rounds: int = typer.Option(2, min=1, max=5, help="Answer/submit retry rounds."),
+) -> None:
+    """Solve an API-driven forensic room (room07 class) with the LLM investigator."""
+    import time
+
+    from zeropath.agents.investigator_agent import InvestigatorAgent, InvestigatorConfig
+    from zeropath.paths import lab_dir as _lab_dir
+
+    run_id = new_run_id()
+    room = get_room(room_id)
+    orch = Orchestrator(run_id=run_id, room=room, lab_dir=_lab_dir(), backend="external", target_url=target)
+    console.print(f"[bold]run_id[/bold]: {run_id}")
+    console.print(f"[bold]room[/bold]: {room.room_id} — {room.title}")
+    console.print(f"[bold]target[/bold]: {target}  [bold]model[/bold]: {model or 'qwen3.5:cloud'}")
+
+    inst = orch.env.start()
+    prefix = "/" + room.start_path.strip("/").split("/")[0]
+    http = HttpTools(base_url=inst.base_url, scope_prefix=prefix)
+    cfg = InvestigatorConfig()
+    if model:
+        cfg.model = model
+
+    def _update(ev: dict) -> None:
+        kind = ev.get("kind", "")
+        text = ev.get("text", "")
+        style = {"question": "bold cyan", "submit": "yellow", "error": "red", "phase": "dim"}.get(kind, "dim")
+        console.print(f"[{style}][{kind}][/{style}] {text}")
+
+    try:
+        agent = InvestigatorAgent(http=http, cfg=cfg, on_update=_update)
+        started = time.monotonic()
+        api_prefix = prefix + "/api"
+        result = agent.solve(api_prefix, max_rounds=max_rounds)
+        elapsed = time.monotonic() - started
+        score = result["score"]
+        solved_count = len(result["solved"])
+        total_q = len(agent.questions)
+        console.print("")
+        console.print(f"[bold]Solved[/bold]: {solved_count}/{total_q} questions")
+        console.print(f"[bold]Score[/bold]: {score.get('score', '?')}/{score.get('max_score', '?')}")
+        console.print(f"[bold]Complete[/bold]: {score.get('complete')}")
+        console.print(f"[bold]Budget[/bold]: events_queries={result['budget']['events']}, submissions={result['budget']['submissions']}, llm_calls={result['budget']['llm_calls']}")
+        console.print(f"[dim]Elapsed: {elapsed:.1f}s · Logs: {(runs_dir() / run_id).resolve()}[/dim]")
+        for q in agent.questions:
+            mark = "[green]✓[/green]" if q.id in result["solved"] else "[red]✗[/red]"
+            console.print(f"  {mark} {q.id}: {q.prompt[:70]}")
+        if score.get("complete"):
+            console.print("[bold green]INVESTIGATION COMPLETE[/bold green]")
+        else:
+            raise typer.Exit(code=1)
+    finally:
+        http.close()
 
 
 @triads_app.command("validate")

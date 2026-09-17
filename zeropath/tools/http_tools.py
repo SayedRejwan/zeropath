@@ -109,6 +109,25 @@ class HttpTools:
             auth = (self.memory.basic_auth_user, self.memory.basic_auth_pass)
         return self.client.get(self.base_url + path, headers=headers, auth=auth)
 
+    def get_json(self, path: str) -> dict:
+        headers = {"Accept": "application/json", "X-Nightshift-Client": "agent"}
+        resp = self.client.get(self.base_url + path, headers={**dict(self.memory.headers), **headers})
+        resp.raise_for_status()
+        return resp.json()
+
+    def get_text(self, path: str) -> str:
+        resp = self.client.get(self.base_url + path, headers=dict(self.memory.headers))
+        resp.raise_for_status()
+        return resp.text
+
+    def post_json_agent(self, path: str, body: dict) -> httpx.Response:
+        self._validate_path(path)
+        return self.client.post(
+            self.base_url + path,
+            json=body,
+            headers={**dict(self.memory.headers), "Content-Type": "application/json", "X-Nightshift-Client": "agent"},
+        )
+
     def post_json(self, path: str, body: dict) -> httpx.Response:
         self._validate_path(path)
         return self.client.post(self.base_url + path, json=body, headers=dict(self.memory.headers))

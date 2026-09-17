@@ -1,0 +1,8 @@
+room_id: room07_midnight_promotion
+title: Midnight Promotion
+description: "Blue-team forensic investigation. Reconstruct the intrusion from 2532 synthetic telemetry events: initial access, process lineage, clock skew, persistence, lateral movement, cloud exposure. Every finding needs evidence IDs."
+docker: {}
+external: true
+start_path: /room07/
+success_regex: INVESTIGATION_COMPLETE\{[A-Za-z0-9_\-:.]{6,128}\}
+max_steps: 400
