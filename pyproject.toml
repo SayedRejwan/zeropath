@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "zeropath"
-version = "0.3.0"
+version = "0.3.1"
 description = "ZeroPath local validation agent with a reviewed ATT&CK triad knowledge base."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -27,4 +27,9 @@ zeropath = "zeropath.cli:app"
 
 [tool.setuptools.packages.find]
 include = ["zeropath*", "scripts*"]
+
+[tool.setuptools.package-data]
+zeropath = ["configs/rooms/*.yaml", "lab/*.py", "lab/requirements.txt", "lab/Dockerfile",
+            "data/triads/techniques/*.yaml", "data/triads/CATALOG.md", "data/thm_rooms/*.yaml",
+            "data/thm_rooms/CATALOG.md"]
 
